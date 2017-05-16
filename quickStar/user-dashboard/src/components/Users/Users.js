@@ -28,6 +28,7 @@ function Users({ dispatch, list: dataSource, total, page: current, loading }) {
       key: 'operation',
       render: (text, { id }) => (
         <span className={styles.operation}>
+
           <a href="">Edit</a>
           <Popconfirm title="Confirm to delete?" onConfirm={deleteHandler.bind(null, id)}>
             <a href="">Delete</a>
