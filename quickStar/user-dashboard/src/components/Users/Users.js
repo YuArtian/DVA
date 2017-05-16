@@ -1,14 +1,11 @@
 import React from 'react';
 import { connect } from 'dva';
 import { Table, Pagination, Popconfirm } from 'antd';
+import { routerRedux } from 'dva/router';
 import styles from './Users.css';
 import { PAGE_SIZE } from '../../constants';
 
-function Users({ list: dataSource, total, page: current }) {
-  function deleteHandler(id) {
-    console.warn(`TODO: ${id}`);
-  }
-
+function Users({ dispatch, list: dataSource, total, page: current, loading }) {
   const columns = [
     {
       title: 'Name',
@@ -39,7 +36,18 @@ function Users({ list: dataSource, total, page: current }) {
       ),
     },
   ];
-
+  function pageChangeHandler (page) {
+    dispatch(routerRedux.push({
+      pathname: '/users',
+      query: { page }
+    }))
+  }
+  function deleteHandler (id) {
+    dispatch({
+      type: 'users/remove',
+      payload: id,
+    });
+  }
   return (
     <div className={styles.normal}>
       <div>
@@ -48,24 +56,29 @@ function Users({ list: dataSource, total, page: current }) {
           dataSource={dataSource}
           rowKey={record => record.id}
           pagination={false}
+          loading={loading}
         />
         <Pagination
           className="ant-table-pagination"
           total={total}
           current={current}
           pageSize={PAGE_SIZE}
+          onChange={pageChangeHandler}
         />
       </div>
     </div>
   );
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state, props) {
+  console.log('state',state)
+  console.log('props',props)
   const { list, total, page } = state.users;
   return {
     list,
     total,
     page,
+    loading: state.loading.models.users,
   };
 }
 
