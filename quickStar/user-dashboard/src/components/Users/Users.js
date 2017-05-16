@@ -48,6 +48,7 @@ function Users({ dispatch, list: dataSource, total, page: current, loading }) {
       payload: id,
     });
   }
+
   return (
     <div className={styles.normal}>
       <div>
